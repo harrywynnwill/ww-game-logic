@@ -4,4 +4,4 @@ describe("Villager", function() {
   beforeEach(function() {
     villager = new Villager();
   });
-}
+});

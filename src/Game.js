@@ -11,6 +11,14 @@ function findNamedPlayer(name, playerArray) {
   }
 }
 
+function countVotes(player) {
+  if(typeof voteCount[player._vote]=== "undefined"){
+    voteCount[player._vote] = 1;
+  } else {
+    voteCount[players._vote] += 1;
+  }
+}
+
 
 
 function shuffle(array) {
@@ -133,26 +141,46 @@ Game.prototype._outputTime = function () {
 Game.prototype._dayVote = function() {
   var voteCount = {};
   var playerCount = this._players.length;
+  var players = this._players;
+  for(var i = 0; i < playerCount; i++) {
+    countVotes(player[i]);
+  }
+  var sortArray = getSortedKeys(voteCount);
+  var deadPlayer = sortArray[0];
+  var toDie = findNamedPlayer(deadPlayer, players);
+  toDie._kill();
+  this._deadPlayers.push(toDie);
+  var index = players.indexOf(toDie);
+  if (index > -1) {
+    players.splice(index, 1);
+  }
+  this._updateTime();
+}
+
+Game.prototype._nightVote = function () {
+  var voteCount = {};
+  var playerCount = this._players.length;
   var players = this._players
   for(var i = 0; i < playerCount; i++) {
-    if(typeof voteCount[players[i]._vote]=== "undefined"){
-      voteCount[players[i]._vote] = 1;
-    } else {
-      voteCount[players[i]._vote]+=1;
+    if(players[i]._role === "werewolf"){
+      countVotes(player[i]);
     }
-    // var c = players[i]._vote;
-    // voteCount[c] = voteCount[c] ? voteCount[c] + 1 : 1
-    //
-
-
   };
   var sortArray = getSortedKeys(voteCount)
 
   var deadPlayer = sortArray[0]
   var players = this._players;
+  var deadPlayers = this._deadPlayers;
   var toDie = findNamedPlayer(deadPlayer, players);
 
   toDie._kill()
+  deadPlayers.push(toDie);
+  var index = players.indexOf(toDie);
+  if (index > -1) {
+    players.splice(index, 1);
+}
+debugger
+
   this._updateTime();
 
-}
+};

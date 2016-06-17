@@ -4,4 +4,4 @@ describe("Werewolf", function() {
   beforeEach(function() {
     werewolf = new Werewolf();
   });
-}
+});
